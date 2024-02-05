@@ -1,11 +1,26 @@
 import "./App.css";
-
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  RouterProvider,
+  Route,
+} from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
+import RegisterPage from "./pages/RegisterPage";
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="register" element={<RegisterPage />} />
+    </>
+  )
+);
 function App() {
   return (
     <>
-      <div className="bg-dark">
-        <h1 className="text-success">hello</h1>
-      </div>
+      <RouterProvider router={router} />
     </>
   );
 }
