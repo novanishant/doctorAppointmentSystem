@@ -1,6 +1,38 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/user.model");
-const loginController = async (req, res) => {};
+const jwt = require("jsonwebtoken");
+const loginController = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return res.status(200).send({
+        message: `User not found`,
+        success: false,
+      });
+    }
+    const isMatch = await bcrypt.compare(req.body.password, user.password);
+    if (!isMatch) {
+      return res.status(200).send({
+        message: "Invalid email or password",
+        success: false,
+      });
+    }
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+    res.status(200).send({
+      message: "Login successfully",
+      success: true,
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `Error in Login Controller ${error.message}`,
+    });
+  }
+};
 const registerController = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email: req.body.email });
@@ -11,7 +43,7 @@ const registerController = async (req, res) => {
     }
     const password = req.body.password;
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password,salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
     req.body.password = hashedPassword;
     const newUser = new User(req.body);
     await newUser.save();
