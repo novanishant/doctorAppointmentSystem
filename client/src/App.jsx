@@ -1,26 +1,53 @@
 import "./App.css";
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="register" element={<RegisterPage />} />
-    </>
-  )
-);
+import { useSelector } from "react-redux";
+import Spinner from "./components/Spinner";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import PublicRoute from "./components/PublicRoute.jsx";
+
 function App() {
+  const { loading } = useSelector((state) => state.alerts);
+
   return (
     <>
-      <RouterProvider router={router} />
+      <BrowserRouter>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <HomePage />
+                </ProtectedRoute>
+              }
+            />
+            ,
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <LoginPage />
+                </PublicRoute>
+              }
+            />
+            ,
+            <Route
+              path="/register"
+              element={
+                <PublicRoute>
+                  <RegisterPage />
+                </PublicRoute>
+              }
+            />
+            ,
+          </Routes>
+        )}
+      </BrowserRouter>
     </>
   );
 }

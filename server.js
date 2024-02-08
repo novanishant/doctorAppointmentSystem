@@ -22,6 +22,7 @@ app.use(cors());
 // routes
 app.use("/api/v1/user",require("./routes/user.route.js"))
 
+
 // listen
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
