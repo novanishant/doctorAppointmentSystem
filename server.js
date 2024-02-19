@@ -8,7 +8,7 @@ const cors = require("cors");
 dotenv.config();
 
 // mongodb connection
-connectDB()
+connectDB();
 // rest object
 const app = express();
 
@@ -20,13 +20,14 @@ app.use(morgan("dev"));
 app.use(cors());
 
 // routes
-app.use("/api/v1/user",require("./routes/user.route.js"))
-
+app.use("/api/v1/user", require("./routes/user.route.js"));
+app.use("/api/v1/admin", require("./routes/admin.route.js"));
 
 // listen
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(
-    `server is running in ${process.env.NODE_MODE} MODE at port ${port}`.bgCyan.white
+    `server is running in ${process.env.NODE_MODE} MODE at port ${port}`.bgCyan
+      .white
   );
 });
