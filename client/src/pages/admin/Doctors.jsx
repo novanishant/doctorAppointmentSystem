@@ -90,6 +90,7 @@ function Doctors() {
   return (
     <Layout>
       <h4> All Doctors</h4>
+      <Table columns={columns} dataSource={doctors} />
     </Layout>
   );
 }
