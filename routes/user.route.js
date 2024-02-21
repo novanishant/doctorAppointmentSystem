@@ -5,6 +5,7 @@ const {
   applyDoctorController,
   getAllNotificationController,
   deleteAllNotificationController,
+  getAllDoctorsController
 } = require("../controllers/user.controller");
 const express = require("express");
 const verifyJWT = require("../middlewares/auth.middleware");
@@ -23,5 +24,6 @@ router.post(
   verifyJWT,
   deleteAllNotificationController
 );
+router.get("/getAllDoctors",verifyJWT,getAllDoctorsController)
 
 module.exports = router;
