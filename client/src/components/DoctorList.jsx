@@ -7,7 +7,7 @@ function DoctorList({ doctor }) {
       <div
         className="card m-3 "
         style={{ cursor: "pointer" }}
-        onClick={() => navigate(`/book-appointment/${doctor._id}`)}
+        onClick={() => navigate(`/doctor/book-appointment/${doctor._id}`)}
       >
         <div className="card-header">
           Dr. {doctor.firstName} {doctor.lastName}
