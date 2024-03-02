@@ -3,6 +3,7 @@ const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const Doctor = require("../models/doctor.model");
 const Appointment = require("../models/appointment.model");
+const moment = require("moment");
 const loginController = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
@@ -171,6 +172,9 @@ const getAllDoctorsController = async (req, res) => {
 };
 const bookAppointmentController = async (req, res) => {
   try {
+    req.body.date = moment(req.body.date, "DD-MM-YYYY").toISOString();
+    req.body.time = moment(req.body.time, "HH:mm").toISOString();
+
     req.body.status = "pending";
     const newAppointment = new Appointment(req.body);
     await newAppointment.save();
@@ -194,6 +198,44 @@ const bookAppointmentController = async (req, res) => {
     });
   }
 };
+const bookingAvailabilityController = async (req, res) => {
+  try {
+    const date = moment(req.body.date, "DD-MM-YYYY").toISOString();
+    const fromTime = moment(req.body.time, "HH-mm")
+      .subtract(1, "hours")
+      .toISOString();
+
+    const toTime = moment(req.body.time, "HH-mm").add(1, "hours").toISOString();
+    const doctorId = req.body.doctorId;
+    const appointments = await Appointment.find({
+      doctorId,
+      date,
+      time: {
+        $gte: fromTime, //greater than equal to
+        $lte: toTime, //less than equal to
+      },
+    });
+    if (appointments.length > 0) {
+      res.status(200).send({
+        success: true,
+        message: `Appointments not available at this time`,
+      });
+    } else {
+      res.status(200).send({
+        success: true,
+        message: `Appointments available`,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Error as booking not available",
+      success: false,
+      error,
+    });
+  }
+};
+
 module.exports = {
   loginController,
   registerController,
@@ -203,4 +245,5 @@ module.exports = {
   deleteAllNotificationController,
   getAllDoctorsController,
   bookAppointmentController,
+  bookingAvailabilityController,
 };
