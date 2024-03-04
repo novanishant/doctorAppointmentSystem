@@ -21,7 +21,7 @@ function Layout({ children }) {
     { name: "Home", path: "/", icon: "fa-solid fa-house" },
     {
       name: "Appointments",
-      path: "/appointments",
+      path: "/doctor-appointments",
       icon: "fa-solid fa-list",
     },
     {

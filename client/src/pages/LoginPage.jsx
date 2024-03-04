@@ -41,7 +41,7 @@ function LoginPage() {
             Not a user Register Here
           </Link>
           <button className="btn btn-primary" type="submit">
-            Register
+            Login
           </button>
         </Form>
       </div>
